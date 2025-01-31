@@ -159,7 +159,7 @@ int main(void)
 {
 
   /* USER CODE BEGIN 1 */
-  for (int i = 0; i < BUTTON_STATE_SIZE; i++) {
+  for (uint8_t i = 0; i < BUTTON_STATE_SIZE; i++) {
     // initialize all buttons on to make it obvious if the 1ms interrupt main loop is never reached
     button_state[i] = 0xff;
   }

@@ -161,13 +161,13 @@ void SysTick_Handler(void)
 void TIM7_IRQHandler(void)
 {
   /* USER CODE BEGIN TIM7_IRQn 0 */
-  for (int i = 0; i < BUTTON_STATE_SIZE; i++) {
+  for (uint8_t i = 0; i < BUTTON_STATE_SIZE; i++) {
     button_state[i] = 0x00;
   }
   /* USER CODE END TIM7_IRQn 0 */
   HAL_TIM_IRQHandler(&htim7);
   /* USER CODE BEGIN TIM7_IRQn 1 */
-  for (int i = 0; i < MODE_BUTTON_COUNT; i++) {
+  for (uint8_t i = 0; i < MODE_BUTTON_COUNT; i++) {
     // this will have the effect of switching between the first two in sequence if two or more buttons are held;
     // that's not something the user should expect to have a meaningful result, so I'm not going to care about it.
     if (HAL_GPIO_ReadPin(mode_button_ports[i], mode_button_pins[i]) == GPIO_PIN_RESET && mode != i) {
@@ -179,7 +179,7 @@ void TIM7_IRQHandler(void)
   }
   // poll the rest of the buttons and send their state directly to the sim
   // TODO ensure no software debouncing is necessary
-  for (int i = 0; i < DIRECT_SEND_BUTTON_COUNT; i++) {
+  for (uint8_t i = 0; i < DIRECT_SEND_BUTTON_COUNT; i++) {
     if (HAL_GPIO_ReadPin(direct_send_button_ports[i], direct_send_button_pins[i]) == GPIO_PIN_RESET) {
       set_bit(button_state, i);
     }
