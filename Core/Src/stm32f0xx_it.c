@@ -54,7 +54,8 @@
 /* Private variables ---------------------------------------------------------*/
 /* USER CODE BEGIN PV */
 uint8_t mode = 0;
-
+uint16_t encoder_1_pos = 0;
+uint16_t encoder_2_pos = 0;
 /* USER CODE END PV */
 
 /* Private function prototypes -----------------------------------------------*/
@@ -180,11 +181,28 @@ void TIM7_IRQHandler(void)
   // TODO ensure no software debouncing is necessary
   for (int i = 0; i < DIRECT_SEND_BUTTON_COUNT; i++) {
     if (HAL_GPIO_ReadPin(direct_send_button_ports[i], direct_send_button_pins[i]) == GPIO_PIN_RESET) {
-      button_state[i/8] |= 0x01 << i%8;
+      set_bit(button_state, i);
     }
   }
 
-  // TODO read the encoders and set the appropriate bits (if any) in button_state
+  int16_t encoder_1_difference = (uint16_t)TIM1->CNT - encoder_1_pos;
+  int16_t encoder_2_difference = (uint16_t)TIM3->CNT - encoder_2_pos;
+  uint8_t encoder_logical_button_base = DIRECT_SEND_BUTTON_COUNT + mode * ENCODER_STATES_COUNT;
+  // the timer increments twice per detent, so only send a button press if it has changed by more than one.
+  if (encoder_1_difference > 1) {
+    set_bit(button_state, encoder_logical_button_base + ENCODER_1_UP);
+    encoder_1_pos = TIM1->CNT;
+  } else if (encoder_1_difference < -1) {
+    set_bit(button_state, encoder_logical_button_base + ENCODER_1_DOWN);
+    encoder_1_pos = TIM1->CNT;
+  }
+  if (encoder_2_difference > 1) {
+    set_bit(button_state, encoder_logical_button_base + ENCODER_2_UP);
+    encoder_2_pos = TIM3->CNT;
+  } else if (encoder_2_difference < -1) {
+    set_bit(button_state, encoder_logical_button_base + ENCODER_2_DOWN);
+    encoder_2_pos = TIM3->CNT;
+  }
 
   //send USB report
   send_hid_report(button_state, BUTTON_STATE_SIZE);

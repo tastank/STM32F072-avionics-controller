@@ -472,7 +472,9 @@ static void MX_GPIO_Init(void)
 }
 
 /* USER CODE BEGIN 4 */
-
+void set_bit(uint8_t *bit_array, uint8_t bit_position) {
+  bit_array[bit_position/8] |= 0x01 << bit_position%8;
+}
 /* USER CODE END 4 */
 
 /**

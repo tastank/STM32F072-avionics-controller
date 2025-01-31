@@ -73,7 +73,7 @@ extern uint16_t mode_led_pins[];
 void Error_Handler(void);
 
 /* USER CODE BEGIN EFP */
-
+void set_bit(uint8_t *bit_array, uint8_t bit_position);
 /* USER CODE END EFP */
 
 /* Private defines -----------------------------------------------------------*/
@@ -146,7 +146,12 @@ void Error_Handler(void);
 
 /* USER CODE BEGIN Private defines */
 #define MODE_COUNT 8
-
+#define ENCODER_1_UP 0
+#define ENCODER_1_DOWN 1
+#define ENCODER_2_UP 2
+#define ENCODER_2_DOWN 3
+// up and down for e1 and e2
+#define ENCODER_STATES_COUNT 4
 /* USER CODE END Private defines */
 
 #ifdef __cplusplus
