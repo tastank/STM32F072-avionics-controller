@@ -63,6 +63,7 @@ TIM_HandleTypeDef htim3;
 TIM_HandleTypeDef htim7;
 
 /* USER CODE BEGIN PV */
+uint8_t mode;
 uint8_t button_state[BUTTON_STATE_SIZE];
 GPIO_TypeDef *direct_send_button_ports[] = {
     S1_GPIO_Port,
@@ -194,6 +195,7 @@ int main(void)
   }
   HAL_TIM_Encoder_Start(&htim1, TIM_CHANNEL_ALL);
   HAL_TIM_Encoder_Start(&htim3, TIM_CHANNEL_ALL);
+  set_mode(0);
 
   /* USER CODE END 2 */
 
@@ -469,6 +471,11 @@ static void MX_GPIO_Init(void)
 }
 
 /* USER CODE BEGIN 4 */
+void set_mode(uint8_t new_mode) {
+  HAL_GPIO_WritePin(mode_led_ports[mode], mode_led_pins[mode], GPIO_PIN_RESET);
+  mode = new_mode;
+  HAL_GPIO_WritePin(mode_led_ports[mode], mode_led_pins[mode], GPIO_PIN_SET);
+}
 
 void set_bit(uint8_t *bit_array, uint8_t bit_position) {
   bit_array[bit_position/8] |= 0x01 << bit_position%8;

@@ -73,6 +73,7 @@ extern uint16_t mode_led_pins[];
 void Error_Handler(void);
 
 /* USER CODE BEGIN EFP */
+void set_mode(uint8_t new_mode);
 void set_bit(uint8_t *bit_array, uint8_t bit_position);
 /* USER CODE END EFP */
 

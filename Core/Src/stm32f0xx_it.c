@@ -53,7 +53,7 @@
 
 /* Private variables ---------------------------------------------------------*/
 /* USER CODE BEGIN PV */
-uint8_t mode = 0;
+extern uint8_t mode;
 uint16_t encoder_1_pos = 0;
 uint16_t encoder_2_pos = 0;
 /* USER CODE END PV */
@@ -171,9 +171,7 @@ void TIM7_IRQHandler(void)
     // this will have the effect of switching between the first two in sequence if two or more buttons are held;
     // that's not something the user should expect to have a meaningful result, so I'm not going to care about it.
     if (HAL_GPIO_ReadPin(mode_button_ports[i], mode_button_pins[i]) == GPIO_PIN_RESET && mode != i) {
-      HAL_GPIO_WritePin(mode_led_ports[mode], mode_led_pins[mode], GPIO_PIN_RESET);
-      mode = i;
-      HAL_GPIO_WritePin(mode_led_ports[mode], mode_led_pins[mode], GPIO_PIN_SET);
+      set_mode(i);
       break;
     }
   }
