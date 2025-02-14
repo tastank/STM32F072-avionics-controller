@@ -106,15 +106,15 @@ __ALIGN_BEGIN static uint8_t CUSTOM_HID_ReportDesc_FS[USBD_CUSTOM_HID_REPORT_DES
   0x15, 0x00,        // Logical Minimum (0)
   0x25, 0x01,        // Logical Maximum (1)
   0x75, 0x01,        // Report Size (1 bit)
-  0x95, 44,        // Report Count (2 buttons)
+  0x95, 58,        // Report Count (58 buttons)
   0x05, 0x09,        // Usage Page (Button)
   0x19, 0x01,        // Usage Minimum (Button 1)
-  0x29, 44,        // Usage Maximum (Button 2) (if usage min = 1, max = report count)
+  0x29, 58,        // Usage Maximum (Button 58) (if usage min = 1, max = report count)
   0x81, 0x02,        // Input (Data, Var, Abs) - Button states
 
   // Padding to align to a byte
   // this section is unnecessary if the report is already byte-aligned, but changing it will require changing HID_JOYSTICK_REPORT_DESC_SIZE, so for convenience the report size can be left at 0
-  0x75, 0x04,        // Report Size
+  0x75, 0x06,        // Report Size
   0x95, 0x01,        // Report Count
   0x81, 0x03,        // Input (Const, Var, Abs) - Padding byte
   /* USER CODE END 0 */

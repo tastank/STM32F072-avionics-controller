@@ -184,6 +184,12 @@ void TIM7_IRQHandler(void)
     }
   }
 
+  for (uint8_t i = 0; i < CONTEXTUAL_BUTTON_COUNT; i++) {
+    if (HAL_GPIO_ReadPin(contextual_button_ports[i], contextual_button_pins[i]) == GPIO_PIN_RESET) {
+      set_bit(button_state, DIRECT_SEND_BUTTON_COUNT + ENCODER_STATES_COUNT * MODE_BUTTON_COUNT + mode*CONTEXTUAL_BUTTON_COUNT + i);
+    }
+  }
+
   int16_t encoder_1_difference = (uint16_t)TIM1->CNT - encoder_1_pos;
   int16_t encoder_2_difference = (uint16_t)TIM3->CNT - encoder_2_pos;
   uint8_t encoder_logical_button_base = DIRECT_SEND_BUTTON_COUNT + mode * ENCODER_STATES_COUNT;
