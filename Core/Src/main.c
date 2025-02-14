@@ -193,6 +193,7 @@ int main(void)
     Error_Handler();
   }
   HAL_TIM_Encoder_Start(&htim1, TIM_CHANNEL_ALL);
+  HAL_TIM_Encoder_Start(&htim3, TIM_CHANNEL_ALL);
 
   /* USER CODE END 2 */
 
@@ -426,8 +427,10 @@ static void MX_GPIO_Init(void)
   GPIO_InitStruct.Pull = GPIO_PULLUP;
   HAL_GPIO_Init(GPIOC, &GPIO_InitStruct);
 
-  /*Configure GPIO pins : S10_Pin S18_Pin S14_Pin */
-  GPIO_InitStruct.Pin = S10_Pin|S18_Pin|S14_Pin;
+  /*Configure GPIO pins : S10_Pin S18_Pin S14_Pin S17_Pin
+                           S13_Pin */
+  GPIO_InitStruct.Pin = S10_Pin|S18_Pin|S14_Pin|S17_Pin
+                          |S13_Pin;
   GPIO_InitStruct.Mode = GPIO_MODE_INPUT;
   GPIO_InitStruct.Pull = GPIO_PULLUP;
   HAL_GPIO_Init(GPIOA, &GPIO_InitStruct);
@@ -437,12 +440,6 @@ static void MX_GPIO_Init(void)
   GPIO_InitStruct.Mode = GPIO_MODE_OUTPUT_PP;
   GPIO_InitStruct.Pull = GPIO_NOPULL;
   GPIO_InitStruct.Speed = GPIO_SPEED_FREQ_LOW;
-  HAL_GPIO_Init(GPIOA, &GPIO_InitStruct);
-
-  /*Configure GPIO pins : S17_Pin S13_Pin */
-  GPIO_InitStruct.Pin = S17_Pin|S13_Pin;
-  GPIO_InitStruct.Mode = GPIO_MODE_INPUT;
-  GPIO_InitStruct.Pull = GPIO_NOPULL;
   HAL_GPIO_Init(GPIOA, &GPIO_InitStruct);
 
   /*Configure GPIO pins : L3_Pin L6_Pin */
@@ -472,6 +469,7 @@ static void MX_GPIO_Init(void)
 }
 
 /* USER CODE BEGIN 4 */
+
 void set_bit(uint8_t *bit_array, uint8_t bit_position) {
   bit_array[bit_position/8] |= 0x01 << bit_position%8;
 }
