@@ -56,6 +56,7 @@
 extern uint8_t mode;
 uint16_t encoder_1_pos = 0;
 uint16_t encoder_2_pos = 0;
+uint8_t encoder_state = 0x00;
 /* USER CODE END PV */
 
 /* Private function prototypes -----------------------------------------------*/
@@ -186,20 +187,33 @@ void TIM7_IRQHandler(void)
   int16_t encoder_1_difference = (uint16_t)TIM1->CNT - encoder_1_pos;
   int16_t encoder_2_difference = (uint16_t)TIM3->CNT - encoder_2_pos;
   uint8_t encoder_logical_button_base = DIRECT_SEND_BUTTON_COUNT + mode * ENCODER_STATES_COUNT;
-  // the timer increments twice per detent, so only send a button press if it has changed by more than one.
-  if (encoder_1_difference > 1) {
-    set_bit(button_state, encoder_logical_button_base + ENCODER_1_UP);
-    encoder_1_pos = TIM1->CNT;
-  } else if (encoder_1_difference < -1) {
-    set_bit(button_state, encoder_logical_button_base + ENCODER_1_DOWN);
-    encoder_1_pos = TIM1->CNT;
+  // don't send encoder pulses twice in a row, or the computer will interpret them as a single button press.
+  if (!(encoder_state & 0x01)) {
+    // the timer increments twice per detent, so only send a button press if it has changed by more than one.
+    if (encoder_1_difference > 1) {
+      set_bit(button_state, encoder_logical_button_base + ENCODER_1_UP);
+      encoder_1_pos = TIM1->CNT;
+      encoder_state |= 0x01;
+    } else if (encoder_1_difference < -1) {
+      set_bit(button_state, encoder_logical_button_base + ENCODER_1_DOWN);
+      encoder_1_pos = TIM1->CNT;
+      encoder_state |= 0x01;
+    }
+  } else {
+    encoder_state &= 0b11111110;
   }
-  if (encoder_2_difference > 1) {
-    set_bit(button_state, encoder_logical_button_base + ENCODER_2_UP);
-    encoder_2_pos = TIM3->CNT;
-  } else if (encoder_2_difference < -1) {
-    set_bit(button_state, encoder_logical_button_base + ENCODER_2_DOWN);
-    encoder_2_pos = TIM3->CNT;
+  if (!(encoder_state & 0x02)) {
+    if (encoder_2_difference > 1) {
+      set_bit(button_state, encoder_logical_button_base + ENCODER_2_UP);
+      encoder_2_pos = TIM3->CNT;
+      encoder_state |= 0x02;
+    } else if (encoder_2_difference < -1) {
+      set_bit(button_state, encoder_logical_button_base + ENCODER_2_DOWN);
+      encoder_2_pos = TIM3->CNT;
+      encoder_state |= 0x02;
+    }
+  } else {
+    encoder_state &= 0b11111101;
   }
 
   //send USB report
