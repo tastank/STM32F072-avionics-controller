@@ -65,7 +65,7 @@ TIM_HandleTypeDef htim7;
 /* USER CODE BEGIN PV */
 uint8_t mode;
 uint8_t button_state[BUTTON_STATE_SIZE];
-GPIO_TypeDef *direct_send_button_ports[] = {
+GPIO_TypeDef *button_ports[] = {
     S1_GPIO_Port,
     S2_GPIO_Port,
     S3_GPIO_Port,
@@ -76,9 +76,10 @@ GPIO_TypeDef *direct_send_button_ports[] = {
     S8_GPIO_Port,
     S9_GPIO_Port,
     S10_GPIO_Port,
-    //S20_GPIO_Port,
+    S19_GPIO_Port,
+    E1S_GPIO_Port,
 };
-uint16_t direct_send_button_pins[] = {
+uint16_t button_pins[] = {
     S1_Pin,
     S2_Pin,
     S3_Pin,
@@ -89,13 +90,6 @@ uint16_t direct_send_button_pins[] = {
     S8_Pin,
     S9_Pin,
     S10_Pin,
-    //S20_Pin,
-};
-GPIO_TypeDef *contextual_button_ports[] = {
-    S19_GPIO_Port,
-    E1S_GPIO_Port,
-};
-uint16_t contextual_button_pins[] = {
     S19_Pin,
     E1S_Pin,
 };

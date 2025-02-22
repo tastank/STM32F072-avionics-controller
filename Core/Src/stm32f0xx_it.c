@@ -176,23 +176,16 @@ void TIM7_IRQHandler(void)
       break;
     }
   }
-  // poll the rest of the buttons and send their state directly to the sim
-  // TODO ensure no software debouncing is necessary
-  for (uint8_t i = 0; i < DIRECT_SEND_BUTTON_COUNT; i++) {
-    if (HAL_GPIO_ReadPin(direct_send_button_ports[i], direct_send_button_pins[i]) == GPIO_PIN_RESET) {
-      set_bit(button_state, i);
-    }
-  }
 
-  for (uint8_t i = 0; i < CONTEXTUAL_BUTTON_COUNT; i++) {
-    if (HAL_GPIO_ReadPin(contextual_button_ports[i], contextual_button_pins[i]) == GPIO_PIN_RESET) {
-      set_bit(button_state, DIRECT_SEND_BUTTON_COUNT + ENCODER_STATES_COUNT * MODE_BUTTON_COUNT + mode*CONTEXTUAL_BUTTON_COUNT + i);
+  for (uint8_t i = 0; i < BUTTON_COUNT; i++) {
+    if (HAL_GPIO_ReadPin(button_ports[i], button_pins[i]) == GPIO_PIN_RESET) {
+      set_bit(button_state, ENCODER_STATES_COUNT * MODE_BUTTON_COUNT + mode*BUTTON_COUNT + i);
     }
   }
 
   int16_t encoder_1_difference = (uint16_t)TIM1->CNT - encoder_1_pos;
   int16_t encoder_2_difference = (uint16_t)TIM3->CNT - encoder_2_pos;
-  uint8_t encoder_logical_button_base = DIRECT_SEND_BUTTON_COUNT + mode * ENCODER_STATES_COUNT;
+  uint8_t encoder_logical_button_base = mode * ENCODER_STATES_COUNT;
   // don't send encoder pulses twice in a row, or the computer will interpret them as a single button press.
   if (!(encoder_state & 0x01)) {
     // the timer increments twice per detent, so only send a button press if it has changed by more than one.

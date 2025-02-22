@@ -49,15 +49,12 @@ extern "C" {
 
 /* Exported constants --------------------------------------------------------*/
 /* USER CODE BEGIN EC */
-#define BUTTON_STATE_SIZE 8
+#define BUTTON_STATE_SIZE 16
 extern uint8_t button_state[];
 // S20 is not used
-#define DIRECT_SEND_BUTTON_COUNT 10
-extern GPIO_TypeDef *direct_send_button_ports[];
-extern uint16_t direct_send_button_pins[];
-#define CONTEXTUAL_BUTTON_COUNT 2
-extern GPIO_TypeDef *contextual_button_ports[];
-extern uint16_t contextual_button_pins[];
+#define BUTTON_COUNT 12
+extern GPIO_TypeDef *button_ports[];
+extern uint16_t button_pins[];
 #define MODE_BUTTON_COUNT 8
 extern GPIO_TypeDef *mode_button_ports[];
 extern GPIO_TypeDef *mode_led_ports[];
