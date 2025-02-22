@@ -64,7 +64,8 @@
 
 /* Private function prototypes -----------------------------------------------*/
 /* USER CODE BEGIN PFP */
-void send_hid_report(uint8_t *report, uint8_t size);
+uint8_t usb_is_ready();
+uint8_t send_hid_report(uint8_t *report, uint8_t size);
 /* USER CODE END PFP */
 
 /*

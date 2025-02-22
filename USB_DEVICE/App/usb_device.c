@@ -67,8 +67,21 @@ USBD_HandleTypeDef hUsbDeviceFS;
 /* Yes, this is just a wrapper for USBD_CUSTOM_HID_SendReport, but putting
  * it here allows this file to retain exclusive ownership of the USB code
  */
-void send_hid_report(uint8_t *report, uint8_t size) {
-  USBD_CUSTOM_HID_SendReport(&hUsbDeviceFS, report, size);
+uint8_t usb_is_ready() {
+  USBD_CUSTOM_HID_HandleTypeDef *hhid = (USBD_CUSTOM_HID_HandleTypeDef *)hUsbDeviceFS.pClassData;
+  return hhid->state == CUSTOM_HID_IDLE && hUsbDeviceFS.dev_state == USBD_STATE_CONFIGURED;
+}
+
+uint8_t send_hid_report(uint8_t *report, uint8_t size) {
+  //USBD_CUSTOM_HID_HandleTypeDef *hhid = (USBD_CUSTOM_HID_HandleTypeDef *)hUsbDeviceFS.pClassData;
+  //hhid->state = CUSTOM_HID_IDLE;
+  uint8_t status = USBD_CUSTOM_HID_SendReport(&hUsbDeviceFS, report, size);
+  if (status != USBD_OK) {
+    HAL_GPIO_WritePin(L4_GPIO_Port, L4_Pin, GPIO_PIN_SET);
+  } else {
+    HAL_GPIO_WritePin(L4_GPIO_Port, L4_Pin, GPIO_PIN_RESET);
+  }
+  return status;
 }
 /* USER CODE END 1 */
 

@@ -162,12 +162,16 @@ void SysTick_Handler(void)
 void TIM7_IRQHandler(void)
 {
   /* USER CODE BEGIN TIM7_IRQn 0 */
-  for (uint8_t i = 0; i < BUTTON_STATE_SIZE; i++) {
-    button_state[i] = 0x00;
-  }
+
   /* USER CODE END TIM7_IRQn 0 */
   HAL_TIM_IRQHandler(&htim7);
   /* USER CODE BEGIN TIM7_IRQn 1 */
+  if (!usb_is_ready()) {
+    return;
+  }
+  for (uint8_t i = 0; i < BUTTON_STATE_SIZE; i++) {
+    button_state[i] = 0x00;
+  }
   for (uint8_t i = 0; i < MODE_BUTTON_COUNT; i++) {
     // this will have the effect of switching between the first two in sequence if two or more buttons are held;
     // that's not something the user should expect to have a meaningful result, so I'm not going to care about it.
